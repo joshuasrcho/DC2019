@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "BluetoothSerial.h"
+//#include "BluetoothSerial.h"
 #include <math.h>
 // defines pins numbers
-BluetoothSerial SerialBT;
+//BluetoothSerial SerialBT;
 const int trigPin = 15;
 const int echoPin = 14;
 // defines variables
@@ -11,7 +11,7 @@ int distance;
 
 void setup() 
 {
-SerialBT.begin("test1"); //Bluetooth device name
+//SerialBT.begin("test1"); //Bluetooth device name
 pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
 pinMode(echoPin, INPUT); // Sets the echoPin as an Input
 Serial.begin(9600); // Starts the serial communication
@@ -31,6 +31,6 @@ duration = pulseIn(echoPin, HIGH);
 // Calculating the distance
 distance= duration*0.0133858/2;
 // Prints the distance on the Serial Monitor
-SerialBT.print("Distance: ");
-SerialBT.println(distance);
+Serial.print("Distance: ");
+Serial.println(distance);
 }
