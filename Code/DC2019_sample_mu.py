@@ -28,7 +28,7 @@ def update(dt):
         print(values)
         if(values[0] == 'x'):
             x[int(values[1])] = int(values[2])
-            #print(x)
+            print(x)
         if(values[0] == 'a'):
             analog = int(values[1])
 

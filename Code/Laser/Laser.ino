@@ -2,7 +2,7 @@
 
 const int laser = 12;
 const int led = 13;
-const int lightsensor = 27;
+const int lightsensor = A2;
 
 int onVal = 100;
 int offVal = 0;
@@ -20,20 +20,18 @@ void setup() {
 
 void loop() {
   digitalWrite(laser, HIGH); 
-  onVal = analogRead(A2);
+  onVal = analogRead(lightsensor);
   delay(50);
   digitalWrite(laser, LOW); 
-  offVal = analogRead(A2);
+  offVal = analogRead(lightsensor);
   delay(50);
-  Serial.print(onVal);
-  Serial.println(offVal);
-  Serial.println("HI");
-  SerialBT.write(Serial.read());
   
   if ((offVal-onVal) > 50){
     digitalWrite(led, HIGH);
     delay(50);
     digitalWrite(led, LOW);
     delay(50);
+    Serial.println("detected");
+    SerialBT.print("detected ");
   }
 }
