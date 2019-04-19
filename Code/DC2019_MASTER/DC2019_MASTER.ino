@@ -14,59 +14,44 @@ void setup() {
   digitalWrite(13,LOW);
 }
 
-String readParameter(){
-//  char buf[50];
-//  for (int i = 0; i<50; i++){
-//    char val = SerialBT.read();
-//    if (val == ' '){
-//      break;
-//    }
-//    else{
-//        buf[i] = val;
-//    }
-//  }
-//  String str((char*)buf);
-//  return str;
-  String content = "";
-  char character;
-
-  while(Serial.available()) {
-      character = Serial.read();
-      content.concat(character);
-  }
-
-  if (content != "") {
-    Serial.println(content);
-  }
+String readBTline(){ 
+  // This function reads a integer value sent from laptop. It's like readline function.
+  // Each string sent from laptop must end with '\n'
+  String instring="";
+  while (!SerialBT.available()){;}
+  while (SerialBT.available()){
+        char received = SerialBT.read();
+        if (received == '\n'){
+          return instring;
+        }
+        instring += received;
+  }    
 }
 
 void loop() {
   char c = 0;
   int an = 0;
-  String xpos = "";
-  char character = 0;
   if (Serial.available()) {
     SerialBT.write(Serial.read());
   }
   if (SerialBT.available()) {
     c = SerialBT.read();
     if(c == 'o'){ // next two numbers received are x and y coordinate of target
-      while(character != 32){
-        character = SerialBT.read();
-        xpos.concat(character);
-      }
-      int xposn = xpos.toInt();
-      int ypos = 100;
-      Serial.print("o ");
-      Serial.print(xposn);
-      Serial.print(" ");
+      String xpos = readBTline();
+      String ypos = readBTline();
+      
+      Serial.print('o');
+      Serial.print(' ');
+      Serial.print(xpos);
+      Serial.print(' ');
       Serial.println(ypos);
       
       digitalWrite(12,HIGH);
       
-      SerialBT.print("o ");
-      SerialBT.print(xposn);
-      SerialBT.print(" ");
+      SerialBT.print('o');
+      SerialBT.print(' ');
+      SerialBT.print(xpos);
+      SerialBT.print(' ');
       SerialBT.println(ypos);
     }
     else if (c == 'p'){
