@@ -4,7 +4,14 @@
 
 BluetoothSerial SerialBT;
 
-int count = 0;
+/******Laser**********/
+const int laser = 12;
+const int led = 13;
+const int lightsensor = A2;
+
+int onVal = 100;
+int offVal = 0;
+/**********************/
 
 void setup() {
   Serial.begin(115200);
@@ -31,9 +38,7 @@ String readBTline(){
 void loop() {
   char c = 0;
   int an = 0;
-  if (Serial.available()) {
-    SerialBT.write(Serial.read());
-  }
+
   if (SerialBT.available()) {
     c = SerialBT.read();
     if(c == 'o'){ // next two numbers received are x and y coordinate of target
@@ -48,10 +53,9 @@ void loop() {
       
       digitalWrite(12,HIGH);
       
-      SerialBT.print('o');
-      SerialBT.print(' ');
+      SerialBT.print("o ");
       SerialBT.print(xpos);
-      SerialBT.print(' ');
+      SerialBT.print(" ");
       SerialBT.println(ypos);
     }
     else if (c == 'p'){
