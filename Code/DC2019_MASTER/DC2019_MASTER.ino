@@ -6,11 +6,7 @@ BluetoothSerial SerialBT;
 
 /******Laser**********/
 const int laser = 12;
-const int led = 13;
 const int lightsensor = A2;
-
-int onVal = 100;
-int offVal = 0;
 /**********************/
 
 void setup() {
@@ -39,6 +35,26 @@ void loop() {
   char c = 0;
   int an = 0;
 
+  /******** LASER *********/
+  // if robot detects reflective surface, we plot green dots at the location
+  // Right now we're just plotting green dots at random locations
+  int onVal = 0;
+  int offVal = 0;
+  digitalWrite(laser, HIGH); 
+  onVal = analogRead(lightsensor);
+  delay(50);
+  digitalWrite(laser, LOW); 
+  offVal = analogRead(lightsensor);
+  delay(50);
+  if ((offVal-onVal) > 50){
+    SerialBT.print("o ");
+    SerialBT.print(random(1,500)); 
+    SerialBT.print(" ");
+    SerialBT.println(random(1,500));
+  }
+  /**************************/
+  
+  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
     c = SerialBT.read();
     if(c == 'o'){ // next two numbers received are x and y coordinate of target
@@ -74,5 +90,6 @@ void loop() {
     }
   }
   delay(20);
+  /****************************************************/
 }
 
