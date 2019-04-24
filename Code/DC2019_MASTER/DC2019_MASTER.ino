@@ -38,7 +38,7 @@ String readBTline(){
 
 void distance_detect(){
   long duration = 0;
-  long distance;
+  int distance;
   for (int i = 0; i<3; i++){
     // Clears the trigPin
     digitalWrite(trigPin, LOW);
