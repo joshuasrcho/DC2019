@@ -12,7 +12,6 @@ targety = [1000]
 
 def draw():
     screen.fill((0, 0, 0))
-    screen.draw.text(str(analog), (250, 20), color="orange", fontsize=80)  # top left to bottom right, ypos is inverted
     for i in range(len(targetx)):
         draw_target((targetx[i],targety[i]))
 
