@@ -7,13 +7,14 @@ TITLE = "Battleship"
 c = 0
 x = [0]*100  # list of size 100 initialized to 0
 analog = 0
-targetx = 1000
-targety = 1000
+targetx = [1000]
+targety = [1000]
 
 def draw():
     screen.fill((0, 0, 0))
     screen.draw.text(str(analog), (250, 20), color="orange", fontsize=80)  # top left to bottom right, ypos is inverted
-    draw_target((targetx,targety))
+    for i in range(len(targetx)):
+        draw_target((targetx[i],targety[i]))
 
 
 def draw_target(pos):
@@ -36,10 +37,10 @@ def update(dt):
         if(values[0] == 'a'):
             analog = int(values[1])
         if(values[0] == 'o'):
-            targetx = int(values[1])
-            targety = int(values[2])
-            print(targetx)
-            print(targety)
+            targetx.append(int(values[1]))
+            targety.append(int(values[2]))
+            #print(targetx)
+            #print(targety)
 
 
 def on_mouse_down(button, pos):
