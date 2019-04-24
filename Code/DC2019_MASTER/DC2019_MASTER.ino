@@ -36,7 +36,7 @@ String readBTline(){
   }    
 }
 
-int laser_detect(){
+bool laser_detect(){
   /******* LASER *********/
   // if robot detects reflective surface, we plot green dots at the location
   // Right now we're just plotting green dots at random locations
@@ -49,14 +49,16 @@ int laser_detect(){
   offVal = analogRead(lightsensor);
   delay(50);
   if ((offVal-onVal) > 50){
+    Serial.println("detected!");
     //SerialBT.print("o ");
     ///SerialBT.print(random(1,500)); 
     //SerialBT.print(" ");
     //SerialBT.println(random(1,500));
-    return 1;
+    return true;
   }
   else{
-    return 0;
+    Serial.println("not detected");
+    return false;
   }
 }
 
@@ -83,10 +85,11 @@ void distance_detect(){
     Serial.println(distance);
     if (laser_detect()){
       SerialBT.print("o ");
+      Serial.println("sending o");
     } else{
+      Serial.println("sending r");
       SerialBT.print("r ");
     }
-    
     SerialBT.print(250); 
     SerialBT.print(" ");
     SerialBT.println(distance*20);

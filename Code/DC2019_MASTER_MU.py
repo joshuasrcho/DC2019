@@ -9,22 +9,26 @@ x = [0]*100  # list of size 100 initialized to 0
 analog = 0
 targetx = [1000]
 targety = [1000]
+barrierx = [1000]
+barriery = [1000]
 
 def draw():
     screen.fill((0, 0, 0))
     for i in range(len(targetx)):
-        draw_target((targetx[i],targety[i]))
+        draw_target((targetx[i],targety[i]),(0,255,0))
+    for j in range(len(barrierx)):
+        draw_target((barrierx[i],barriery[i]),(255,0,0))
 
 
-def draw_target(pos):
+def draw_target(pos,color):
     xpos = pos[0]
     ypos = pos[1]
-    screen.draw.filled_circle((xpos, ypos), 3, (0, 255, 0))  # draw a green circle at the position
+    screen.draw.filled_circle((xpos, ypos), 3, color)  # draw a green circle at the position
 
 
 def update(dt):
     global c, HEIGHT
-    global x, analog, targetx, targety
+    global x, analog, targetx, targety, dotColor
     c = (c + 1) % 256
     while ser.in_waiting:
         line = ser.read_until().strip()  # strip() removes the \r\n
@@ -33,8 +37,9 @@ def update(dt):
         if(values[0] == 'x'):
             x[int(values[1])] = int(values[2])
             print(x)
-        if(values[0] == 'a'):
-            analog = int(values[1])
+        if(values[0] == 'r'):
+            barrierx.append(int(values[1]))
+            barriery.append(int(values[2]))
         if(values[0] == 'o'):
             targetx.append(int(values[1]))
             targety.append(int(values[2]))
