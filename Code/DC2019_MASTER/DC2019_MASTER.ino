@@ -4,21 +4,13 @@
 
 BluetoothSerial SerialBT;
 
-/******Laser**********/
-const int laser = 12;
-const int lightsensor = A2;
-/***ultrasonic sensor***/
-const int trigPin = 27;
-const int echoPin = 33;
+int count = 0;
 
 void setup() {
   Serial.begin(115200);
   SerialBT.begin("HunterLuckless"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
-  pinMode(laser,OUTPUT);
-  pinMode(lightsensor, INPUT);
-  pinMode(trigPin, OUTPUT); 
-  pinMode(echoPin, INPUT); 
+  pinMode(12,OUTPUT);
   digitalWrite(13,LOW);
 }
 
@@ -36,60 +28,12 @@ String readBTline(){
   }    
 }
 
-void distance_detect(){
-  long duration = 0;
-  int distance;
-  for (int i = 0; i<3; i++){
-    // Clears the trigPin
-    digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
-    // Sets the trigPin on HIGH state for 10 micro seconds
-    digitalWrite(trigPin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trigPin, LOW);
-    // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = duration + pulseIn(echoPin, HIGH);
-  }
-  
-  // Calculating the distance
-  distance= duration*0.0133858/6;
-  // Prints the distance on the Serial Monitor
-  if (distance < 20){
-    Serial.print("Distance: ");
-    Serial.println(distance);
-    SerialBT.print("o ");
-    SerialBT.print(250); 
-    SerialBT.print(" ");
-    SerialBT.println(distance*20);
-  }
-}
-
-
 void loop() {
   char c = 0;
   int an = 0;
-  distance_detect();
-
-  /******** LASER *********
-  // if robot detects reflective surface, we plot green dots at the location
-  // Right now we're just plotting green dots at random locations
-  int onVal = 0;
-  int offVal = 0;
-  digitalWrite(laser, HIGH); 
-  onVal = analogRead(lightsensor);
-  delay(50);
-  digitalWrite(laser, LOW); 
-  offVal = analogRead(lightsensor);
-  delay(50);
-  if ((offVal-onVal) > 50){
-    SerialBT.print("o ");
-    SerialBT.print(random(1,500)); 
-    SerialBT.print(" ");
-    SerialBT.println(random(1,500));
+  if (Serial.available()) {
+    SerialBT.write(Serial.read());
   }
-  */
-  
-  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
     c = SerialBT.read();
     if(c == 'o'){ // next two numbers received are x and y coordinate of target
@@ -104,9 +48,10 @@ void loop() {
       
       digitalWrite(12,HIGH);
       
-      SerialBT.print("o ");
+      SerialBT.print('o');
+      SerialBT.print(' ');
       SerialBT.print(xpos);
-      SerialBT.print(" ");
+      SerialBT.print(' ');
       SerialBT.println(ypos);
     }
     else if (c == 'p'){
@@ -125,6 +70,5 @@ void loop() {
     }
   }
   delay(20);
-  /****************************************************/
 }
 
