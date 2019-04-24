@@ -36,6 +36,30 @@ String readBTline(){
   }    
 }
 
+int laser_detect(){
+  /******* LASER *********/
+  // if robot detects reflective surface, we plot green dots at the location
+  // Right now we're just plotting green dots at random locations
+  int onVal = 0;
+  int offVal = 0;
+  digitalWrite(laser, HIGH); 
+  onVal = analogRead(lightsensor);
+  delay(50);
+  digitalWrite(laser, LOW); 
+  offVal = analogRead(lightsensor);
+  delay(50);
+  if ((offVal-onVal) > 50){
+    //SerialBT.print("o ");
+    ///SerialBT.print(random(1,500)); 
+    //SerialBT.print(" ");
+    //SerialBT.println(random(1,500));
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
 void distance_detect(){
   long duration = 0;
   long distance;
@@ -57,7 +81,12 @@ void distance_detect(){
   if (distance < 20){
     Serial.print("Distance: ");
     Serial.println(distance);
-    SerialBT.print("o ");
+    if (laser_detect()){
+      SerialBT.print("o ");
+    } else{
+      SerialBT.print("r ");
+    }
+    
     SerialBT.print(250); 
     SerialBT.print(" ");
     SerialBT.println(distance*20);
@@ -70,24 +99,7 @@ void loop() {
   int an = 0;
   distance_detect();
 
-  /******** LASER *********
-  // if robot detects reflective surface, we plot green dots at the location
-  // Right now we're just plotting green dots at random locations
-  int onVal = 0;
-  int offVal = 0;
-  digitalWrite(laser, HIGH); 
-  onVal = analogRead(lightsensor);
-  delay(50);
-  digitalWrite(laser, LOW); 
-  offVal = analogRead(lightsensor);
-  delay(50);
-  if ((offVal-onVal) > 50){
-    SerialBT.print("o ");
-    SerialBT.print(random(1,500)); 
-    SerialBT.print(" ");
-    SerialBT.println(random(1,500));
-  }
-  */
+ 
   
   /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
