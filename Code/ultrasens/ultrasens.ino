@@ -3,8 +3,8 @@
 #include <math.h>
 // defines pins numbers
 BluetoothSerial SerialBT;
-const int trigPin = 15;
-const int echoPin = 14;
+const int trigPin = 27;
+const int echoPin = 33;
 // defines variables
 long duration;
 int distance;
@@ -32,21 +32,7 @@ duration = pulseIn(echoPin, HIGH);
 // Calculating the distance
 distance= duration*0.0133858/2;
 
-// if (SerialBT.available())
-//    {  
-//        c = SerialBT.read();
-//        Serial.write(c);
-//    }
-// 
-//    // Keep reading from Arduino Serial Monitor and send to HC-05
-//    if (Serial.available())
-//    {
-//        c =  Serial.read();
-//        SerialBT.write(c);  
-//    }
-
-// Prints the distance on the Serial Monitor
-//SerialBT.print("Distance: ");
+Serial.println(distance);
 
 SerialBT.println(distance);
 }

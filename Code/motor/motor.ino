@@ -32,9 +32,7 @@ void loop() {
   Serial.println("forward");
   forward(255);
   delay(3000);
-  
-  Serial.println("angle");
-  turnAngle();
+
 
   Serial.println("backward");
   backward(255);
@@ -84,28 +82,3 @@ void stopMotor() {
   ledcWrite(PWM1channel,0);
   ledcWrite(PWM1channel,0);
 }
-
-void turnAngle(){
-  int aState, aLastState = 0;
-  int counter = 0;
-  int angle = 0;
-  while(counter < 20000){
-    aState = digitalRead(M1A);
-  
-    if (aState != aLastState){     
-      if (digitalRead(M1B) != aState) {
-         counter ++;
-         angle ++;
-         forward(255); 
-      }
-      else {
-         counter--;
-         angle --;
-         backward(255); 
-       }
-    }
-    aLastState = aState; 
-    Serial.println(counter); 
-  }
-}
-
