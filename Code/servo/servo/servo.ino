@@ -19,13 +19,19 @@ void loop() {
 
 // This function makes the robot grab cylinder
 void openClaw(){
-  Claw.write(180); // Make servo go to 169 degrees 
-  delay(1000); // wait 1 second
+  for(int i=50;i<180;i++){
+    Claw.write(i); // Make servo go to 169 degrees 
+    delay(5);
+  }
+  delay(1000);
 }
 
 // This function makes the robot grab cube
 void closeClaw(){
-  Claw.write(0);
+  for(int i=0;i<130;i++){
+    Claw.write(180-i); // Make servo go to 169 degrees 
+    delay(5);
+  }
   delay(1000);
 }
 
