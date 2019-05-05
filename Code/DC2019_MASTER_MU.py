@@ -68,4 +68,4 @@ def on_key_down(key):  # key names are saved in CAPS
         ser.write(b'c')
         print("Sent c")
 
-ser = serial.Serial('COM6', 9600)
+ser = serial.Serial('COM8', 9600)
