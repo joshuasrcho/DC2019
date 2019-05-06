@@ -1,79 +1,91 @@
 #include "BluetoothSerial.h"
 #include "laser.h"
 #include "ultrasense.h"
+#include "motor.h"
+#include "gripper.h"
 #include <stdio.h>
 #include <math.h>
 
 BluetoothSerial SerialBT; //instantiate bluetooth serial
 Laser laser; // instantiate laser detector
 Ultrasense usensor;
+Motor motor;
+Gripper gripper;
 
-/***ultrasonic sensor***/
-const int trigPin = 27;
-const int echoPin = 33;
+void countM1(){ // ISR
+  motor.M1EncoderCount++; // Every time encoder pulse rises, count the number of ticks
+                    // Each revolution has ~400 ticks
+}
+
+void countM2(){ // ISR
+  motor.M2EncoderCount++; // Every time encoder pulse rises, count the number of ticks
+                    // Each revolution has ~400 ticks
+}
 
 void setup() {
+  attachInterrupt(digitalPinToInterrupt(motor.M1Encoder), countM1, RISING); // Every time encoder pulse rises, count the number of ticks
+  attachInterrupt(digitalPinToInterrupt(motor.M2Encoder), countM2, RISING); // Every time encoder pulse rises, count the number of ticks 
   Serial.begin(115200);
   SerialBT.begin("HunterLuckless"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
-  pinMode(trigPin, OUTPUT); 
-  pinMode(echoPin, INPUT); 
   digitalWrite(13,LOW);
 }
 
-
-
 void loop() {
-  char c = 0;
-  long distance = 0;
-  distance = usensor.distance_detect();
-  if (distance < 20){
-    Serial.print("Distance: ");
-    Serial.println(distance);
-    if (laser.laser_detect()){
-      SerialBT.print("o ");
-      Serial.println("sending o");
-    } else{
-      Serial.println("sending r");
-      SerialBT.print("r ");
-    }
-    SerialBT.print(250); 
-    SerialBT.print(" ");
-    SerialBT.println(distance*20);
-  }
- 
-  
-  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
-  if (SerialBT.available()) {
-    c = SerialBT.read();
-    if(c == 'o'){ // next two numbers received are x and y coordinate of target
-      String xpos = readBTline();
-      String ypos = readBTline();
-      
-      Serial.print('o');
-      Serial.print(' ');
-      Serial.print(xpos);
-      Serial.print(' ');
-      Serial.println(ypos);
-      
-      digitalWrite(12,HIGH);
-      
-      SerialBT.print("o ");
-      SerialBT.print(xpos);
-      SerialBT.print(" ");
-      SerialBT.println(ypos);
-    }
-    else if (c == 'p'){
-      digitalWrite(12,LOW);
-    }
-    else if (c == 'x'){
-      ;
-    }
-    else if (c == 'c'){
-      SerialBT.println("c 1");
-    }
-  }
-  delay(20);
+  gripper.openGripper();
+  Serial.println(gripper.closeGripper());
+
+// ULTRASENSE + LASER TEST *******************  
+//  char c = 0;
+//  long distance = 0;
+//  distance = usensor.distance_detect();
+//  if (distance < 20){
+//    Serial.print("Distance: ");
+//    Serial.println(distance);
+//    if (laser.laser_detect()){
+//      SerialBT.print("o ");
+//      Serial.println("sending o");
+//    } else{
+//      Serial.println("sending r");
+//      SerialBT.print("r ");
+//    }
+//    SerialBT.print(250); 
+//    SerialBT.print(" ");
+//    SerialBT.println(distance*20);
+//  }
+// 
+//  
+//  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
+//  if (SerialBT.available()) {
+//    c = SerialBT.read();
+//    if(c == 'o'){ // next two numbers received are x and y coordinate of target
+//      String xpos = readBTline();
+//      String ypos = readBTline();
+//      
+//      Serial.print('o');
+//      Serial.print(' ');
+//      Serial.print(xpos);
+//      Serial.print(' ');
+//      Serial.println(ypos);
+//      
+//      digitalWrite(12,HIGH);
+//      
+//      SerialBT.print("o ");
+//      SerialBT.print(xpos);
+//      SerialBT.print(" ");
+//      SerialBT.println(ypos);
+//    }
+//    else if (c == 'p'){
+//      digitalWrite(12,LOW);
+//    }
+//    else if (c == 'x'){
+//      ;
+//    }
+//    else if (c == 'c'){
+//      SerialBT.println("c 1");
+//    }
+//  }
+//  delay(20);
   /****************************************************/
 }
 
