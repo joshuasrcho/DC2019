@@ -10,7 +10,7 @@
 class Ultrasense {
   public:
     Ultrasense(void);
-    long distance_detect(void);
+    float distance_detect(void);
   private: 
     const int trigPin = 27;
     const int echoPin = 33;

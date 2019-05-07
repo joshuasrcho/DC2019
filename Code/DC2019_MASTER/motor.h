@@ -13,8 +13,6 @@ class Motor{
     void forward(int distance); // distance increments by 1/8 of a inch (1 means 0.125 inch, 8 means 1 inch)
     void backward(int distance); 
     void stopMotor();
-    void countM1();
-    void countM2();
 
     volatile int M1EncoderCount = 0;
     volatile int M2EncoderCount = 0;
@@ -22,8 +20,8 @@ class Motor{
     const int M2Encoder = 36; // Motor 2 encoder
     
   private: 
-    const int M1PWM = 32; // Motor 1 PWM (speed)
-    const int M1DIR = 14; // Motor 1 direction
+    const int M1PWM = 14; // Motor 1 PWM (speed)
+    const int M1DIR = 32; // Motor 1 direction
     const int M2PWM = 26; // Motor 2 PWM (speed)
     const int M2DIR = 25; // Motor 2 direction 
     // Set up PWM channels

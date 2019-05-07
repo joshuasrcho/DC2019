@@ -25,12 +25,8 @@ void loop() {
   digitalWrite(laser, LOW); 
   offVal = analogRead(lightsensor);
   delay(50);
-  
-  if ((offVal-onVal) > 50){
-    digitalWrite(led, HIGH);
-    delay(50);
-    digitalWrite(led, LOW);
-    delay(50);
+  Serial.println(offVal-onVal);
+  if ((offVal-onVal) > 500){
     Serial.println("detected");
     SerialBT.print("detected ");
   }

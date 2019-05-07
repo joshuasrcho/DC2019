@@ -5,9 +5,9 @@ Ultrasense::Ultrasense(void){
   pinMode(echoPin, INPUT); 
 }
 
-long Ultrasense::distance_detect(){
+float Ultrasense::distance_detect(){
   long duration = 0;
-  long distance;
+  float distance;
   for (int i = 0; i<3; i++){
     // Clears the trigPin
     digitalWrite(trigPin, LOW);

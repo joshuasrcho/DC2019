@@ -1,5 +1,5 @@
-const int M1PWM = 32; // Motor 1 PWM (speed)
-const int M1DIR = 14; // Motor 1 direction
+const int M1PWM = 14; // Motor 1 PWM (speed)
+const int M1DIR = 32; // Motor 1 direction
 const int M1Encoder = 4; // Motor 1 encoder 
 const int M2PWM = 26; // Motor 2 PWM (speed)
 const int M2DIR = 25; // Motor 2 direction 
