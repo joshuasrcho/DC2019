@@ -30,7 +30,7 @@ void loop() {
   distance = usensor.distance_detect();
   if (distance < 20){
     Serial.print("Distance: ");
-    Serial.println(int(distance*20));
+    Serial.println(distance);
     if (laser.laser_detect()){
       SerialBT.print("o ");
       Serial.println("sending o");

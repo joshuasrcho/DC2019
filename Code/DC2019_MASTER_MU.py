@@ -14,7 +14,7 @@ barriery = [1000]
 
 def draw():
     screen.fill((0, 0, 0))
-
+    screen.draw.filled_circle((100, 100), 3, (255,0,0))
     for i in range(len(targetx)):
         draw_target((targetx[i],targety[i]),(0,255,0))
     for j in range(len(barrierx)):
@@ -69,4 +69,4 @@ def on_key_down(key):  # key names are saved in CAPS
         ser.write(b'c')
         print("Sent c")
 
-ser = serial.Serial('COM11', 9600)
+ser = serial.Serial('COM6', 9600)
