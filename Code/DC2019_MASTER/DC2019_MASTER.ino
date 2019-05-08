@@ -10,7 +10,7 @@ BluetoothSerial SerialBT; //instantiate bluetooth serial
 Laser laser; // instantiate laser detector
 Ultrasense usensor;
 Motor motor;
-//Gripper gripper;
+Gripper gripper;
 
 
 
@@ -23,8 +23,14 @@ void setup() {
 }
 
 void loop() {
+  gripper.openGripper();
+  if(gripper.closeGripper()){
+    motor.forward(96);
+    delay(1000);
+    motor.backward(96);
+  }
   
-  motor.turnLeft(360);
+  
 
   
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/

@@ -6,8 +6,8 @@ const int M2DIR = 25; // Motor 2 direction
 const int M2Encoder = 36; // Motor 2 encoder
 
 // Set up PWM channels
-const int PWM1channel = 0;
-const int PWM2channel = 1;
+const int PWM1channel = 1;
+const int PWM2channel = 2;
 
 volatile int M1EncoderCount = 0;
 volatile int M2EncoderCount = 0;

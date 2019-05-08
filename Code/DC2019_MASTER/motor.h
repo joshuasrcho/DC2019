@@ -27,8 +27,8 @@ class Motor{
     const int M2PWM = 26; // Motor 2 PWM (speed)
     const int M2DIR = 25; // Motor 2 direction 
     // Set up PWM channels
-    const int PWM1channel = 0;
-    const int PWM2channel = 1;    
+    const int PWM1channel = 2;
+    const int PWM2channel = 3;    
 };
 
 
