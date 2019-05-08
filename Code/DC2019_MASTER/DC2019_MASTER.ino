@@ -56,28 +56,22 @@ void loop() {
       SerialBT.print(" ");
       SerialBT.println(ypos);
     }
-    else if (c == 'p'){
-      digitalWrite(12,LOW);
-    }
-    else if (c == 'x'){
-      ;
-    }
-    else if (c == 'c'){
-      SerialBT.println("c 1");
-    }
-    while (c == 'w'){
+    else if (c == 'w'){
+      Serial.print('w');
       motor.forward(1000);
     }
-    while (c == 's'){
+    else if (c == 's'){
+      Serial.print('s');
       motor.backward(1000);
     }
-    while (c == 'd'){
-      motor.turnright(360);
+    else if (c == 'd'){
+      Serial.print('d');
+      motor.turnRight(360);
     } 
-    while (c == 'a'){
-      motor.turnleft(360);
+    else if (c == 'a'){
+      Serial.print('a');
+      motor.turnLeft(360);
     }       
-    }
   }
   delay(20);
   /****************************************************/

@@ -61,7 +61,7 @@ def on_mouse_up(button, pos):
 def on_key_down(key):  # key names are saved in CAPS
     if key.name == 'W':
         ser.write(b'w')
-        print("Sent x")
+        print("Sent w")
     if key.name == 'S':
         ser.write(b's')
         print("Sent s")

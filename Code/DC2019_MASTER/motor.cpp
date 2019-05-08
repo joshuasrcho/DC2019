@@ -125,16 +125,15 @@ void Motor::turnRight(int angle){
     } else if (slavePWM < 0){
       slavePWM = 0;
     }
-    Serial.print("error: ");
-    Serial.println(error);
-    Serial.println(slavePWM);
+    //Serial.print("error: ");
+    //Serial.println(error);
+    //Serial.println(slavePWM);
     totalCount += M1EncoderCount;
     M1EncoderCount = 0;
     M2EncoderCount = 0;
     delay(100);
   }
   stopMotor();
-  delay(1000); 
 }
 
 void Motor::turnLeft(int angle){
@@ -158,16 +157,15 @@ void Motor::turnLeft(int angle){
     } else if (slavePWM < 0){
       slavePWM = 0;
     }
-    Serial.print("error: ");
-    Serial.println(error);
-    Serial.println(slavePWM);
+    //Serial.print("error: ");
+    //Serial.println(error);
+    //Serial.println(slavePWM);
     totalCount += M1EncoderCount;
     M1EncoderCount = 0;
     M2EncoderCount = 0;
     delay(100);
   }
   stopMotor();
-  delay(1000); 
 }
 
 
