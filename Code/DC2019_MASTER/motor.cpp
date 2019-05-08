@@ -76,8 +76,8 @@ void Motor::backward(int distance) {
   int totalCount = 0; // totalCount keeps track of how far the robot has traveled
   // masterPWM is the reference PWM value and is assigned to PWMChannel1 or M1
   // slavePWM adjusts based on error to try to keep the robot straight
-  int masterPWM = 50; // Default PWM duty cycle of 20%
-  int slavePWM = 50; // Default PWM duty cycle of 20%
+  int masterPWM = 75; // Default PWM duty cycle of 20%
+  int slavePWM = 75; // Default PWM duty cycle of 20%
   int error = 0; // initialize error to 0
   int kp = 2; // kp is the proportional constant. 2 seems to work well.
 

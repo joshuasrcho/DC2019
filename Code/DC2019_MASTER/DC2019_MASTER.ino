@@ -23,13 +23,14 @@ void setup() {
 }
 
 void loop() {
-  gripper.openGripper();
-  if(gripper.closeGripper()){
-    motor.forward(96);
-    delay(1000);
-    motor.backward(96);
-  }
-  
+ motor.turnLeft(90);
+ delay(1000);
+ motor.turnLeft(180);
+ delay(1000);
+ motor.turnLeft(270);
+ delay(1000);
+ motor.turnLeft(360);
+ delay(1000);
   
 
   
