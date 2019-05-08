@@ -23,14 +23,16 @@ void setup() {
 }
 
 void loop() {
- motor.turnLeft(90);
- delay(1000);
- motor.turnLeft(180);
- delay(1000);
- motor.turnLeft(270);
- delay(1000);
- motor.turnLeft(360);
- delay(1000);
+
+  
+ //motor.turnLeft(90);
+ //delay(1000);
+// motor.turnLeft(180);
+ //delay(1000);
+ //motor.turnLeft(270);
+ //delay(1000);
+ //motor.turnLeft(360);
+// delay(1000);
   
 
   
@@ -62,6 +64,19 @@ void loop() {
     }
     else if (c == 'c'){
       SerialBT.println("c 1");
+    }
+    while (c == 'w'){
+      motor.forward(1000);
+    }
+    while (c == 's'){
+      motor.backward(1000);
+    }
+    while (c == 'd'){
+      motor.turnright(360);
+    } 
+    while (c == 'a'){
+      motor.turnleft(360);
+    }       
     }
   }
   delay(20);
@@ -116,5 +131,3 @@ void scan(){
     SerialBT.println(250);
   }
 }
-
-

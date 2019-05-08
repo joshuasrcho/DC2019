@@ -59,11 +59,16 @@ def on_mouse_up(button, pos):
     ser.write(b'a')
 
 def on_key_down(key):  # key names are saved in CAPS
-    if key.name == 'X':
-        ser.write(b'x')
+    if key.name == 'W':
+        ser.write(b'w')
         print("Sent x")
-    if key.name == 'C':
-        ser.write(b'c')
-        print("Sent c")
-
+    if key.name == 'S':
+        ser.write(b's')
+        print("Sent s")
+    if key.name == 'A':
+        ser.write(b'a')
+        print("Sent a")
+    if key.name == 'D':
+        ser.write(b'd')
+        print("Sent d")
 ser = serial.Serial('COM5', 9600)
