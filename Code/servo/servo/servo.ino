@@ -16,6 +16,7 @@ void setup() {
 
 void loop() {
   openClaw();
+  closeClaw();
 }
 
 // This function makes the robot open its claw

@@ -2,7 +2,7 @@ import serial
 import string
 
 WIDTH = 500
-HEIGHT = 250
+HEIGHT = 500
 TITLE = "Fading Green!"
 c = 0
 x = [0]*100 # list of size 100 initialized to 0
@@ -49,4 +49,4 @@ def on_key_down(key): #key names are saved in CAPS
         ser.write(b'c')
         print("Sent c")
 
-ser = serial.Serial('COM6',9600)
+ser = serial.Serial('COM5',9600)

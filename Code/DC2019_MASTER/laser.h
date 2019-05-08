@@ -10,7 +10,7 @@
 class Laser {
   public:
     Laser(void);
-    bool laser_detect(void);
+    bool laser_detect(int threshold);
   private: 
     const int laser = 12;
     const int lightsensor = A2;

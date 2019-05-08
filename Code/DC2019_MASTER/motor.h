@@ -13,6 +13,8 @@ class Motor{
     void forward(int distance); // distance increments by 1/8 of a inch (1 means 0.125 inch, 8 means 1 inch)
     void backward(int distance); 
     void stopMotor();
+    void turnRight(int angle);
+    void turnLeft(int angle);
 
     volatile int M1EncoderCount = 0;
     volatile int M2EncoderCount = 0;

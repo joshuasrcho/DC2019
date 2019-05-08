@@ -14,11 +14,10 @@ barriery = [1000]
 
 def draw():
     screen.fill((0, 0, 0))
-    screen.draw.filled_circle((100, 100), 3, (255,0,0))
     for i in range(len(targetx)):
         draw_target((targetx[i],targety[i]),(0,255,0))
     for j in range(len(barrierx)):
-        draw_target((barrierx[i],barriery[i]),(255,0,0))
+        draw_target((barrierx[j],barriery[j]),(255,0,0))
 
 
 def draw_target(pos,color):
@@ -35,17 +34,15 @@ def update(dt):
         line = ser.read_until().strip()  # strip() removes the \r\n
         values = line.decode('ascii').split(' ')
         print(values)
-        if(values[0] == 'x'):
-            x[int(values[1])] = int(values[2])
-            print(x)
+        if(values[0] == 'o'):
+            barrierx.append(int(values[1]))
+            barriery.append(int(values[2]))
         if(values[0] == 'r'):
             barrierx.append(int(values[1]))
             barriery.append(int(values[2]))
-        if(values[0] == 'o'):
+        if(values[0] == 'g'):
             targetx.append(int(values[1]))
             targety.append(int(values[2]))
-            #print(targetx)
-            #print(targety)
 
 
 def on_mouse_down(button, pos):
@@ -69,4 +66,4 @@ def on_key_down(key):  # key names are saved in CAPS
         ser.write(b'c')
         print("Sent c")
 
-ser = serial.Serial('COM6', 9600)
+ser = serial.Serial('COM5', 9600)

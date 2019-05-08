@@ -23,30 +23,13 @@ void setup() {
 }
 
 void loop() {
+  
+  motor.turnLeft(360);
 
- //ULTRASENSE + LASER TEST *******************  
-  char c = 0;
-  float distance = 0;
-  distance = usensor.distance_detect();
-  if (distance < 20){
-    Serial.print("Distance: ");
-    Serial.println(distance);
-    if (laser.laser_detect()){
-      SerialBT.print("o ");
-      Serial.println("sending o");
-    } else{
-      Serial.println("sending r");
-      SerialBT.print("r ");
-    }
-    SerialBT.print(250); 
-    SerialBT.print(" ");
-    SerialBT.println(int(distance*20));
-  }
-// 
-//  
+  
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
-    c = SerialBT.read();
+    char c = SerialBT.read();
     if(c == 'o'){ // next two numbers received are x and y coordinate of target
       String xpos = readBTline();
       String ypos = readBTline();
@@ -100,6 +83,31 @@ String readBTline(){
         }
         instring += received;
   }    
+}
+
+// scan using usensor and laser. if detected, send object coordinates and red/green over bluetooth
+void scan(){
+  char c = 0;
+  int laserThreshold;
+  float distance = 0;
+  distance = usensor.distance_detect();
+  if ((distance < 12) and (distance > 4.5)){
+    laserThreshold = -900;
+    if (laser.laser_detect(laserThreshold)){
+      SerialBT.print("g ");
+      Serial.print("g ");
+    } else{
+      SerialBT.print("r ");
+      Serial.print("r ");
+    }
+    Serial.print(int(distance*8));
+    Serial.print(" ");
+    Serial.println(250);
+    
+    SerialBT.print(int(distance*8));
+    SerialBT.print(" ");
+    SerialBT.println(250);
+  }
 }
 
 

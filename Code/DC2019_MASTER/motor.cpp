@@ -104,6 +104,80 @@ void Motor::backward(int distance) {
   stopMotor();
 }
 
+void Motor::turnRight(int angle){
+  int count = (angle*1100)/360;
+  M1EncoderCount = 0;
+  M2EncoderCount = 0;
+  int masterPWM = 100; // Default PWM duty cycle of 29%
+  int slavePWM = 100; // Default PWM duty cycle of 29%
+  int error;
+  int kp = 2;
+  int totalCount = 0;
+  digitalWrite(M1DIR,HIGH); 
+  digitalWrite(M2DIR,HIGH);
+  while (totalCount < count){
+    ledcWrite(PWM1channel,masterPWM);
+    ledcWrite(PWM2channel,slavePWM);
+    error = M1EncoderCount - M2EncoderCount;
+    slavePWM -= error / kp;
+    if (slavePWM > 255){
+      slavePWM = 255;
+    } else if (slavePWM < 0){
+      slavePWM = 0;
+    }
+    Serial.print("error: ");
+    Serial.println(error);
+    Serial.println(slavePWM);
+    totalCount += M1EncoderCount;
+    M1EncoderCount = 0;
+    M2EncoderCount = 0;
+    delay(100);
+  }
+  stopMotor();
+  delay(1000); 
+}
+
+void Motor::turnLeft(int angle){
+  int count = (angle*1100)/360;
+  M1EncoderCount = 0;
+  M2EncoderCount = 0;
+  int masterPWM = 100; // Default PWM duty cycle of 29%
+  int slavePWM = 100; // Default PWM duty cycle of 29%
+  int error;
+  int kp = 1;
+  int totalCount = 0;
+  digitalWrite(M1DIR,LOW); 
+  digitalWrite(M2DIR,LOW);
+  while (totalCount < count){
+    ledcWrite(PWM1channel,masterPWM);
+    ledcWrite(PWM2channel,slavePWM);
+    error = M1EncoderCount - M2EncoderCount;
+    slavePWM -= error / kp;
+    if (slavePWM > 255){
+      slavePWM = 255;
+    } else if (slavePWM < 0){
+      slavePWM = 0;
+    }
+    Serial.print("error: ");
+    Serial.println(error);
+    Serial.println(slavePWM);
+    totalCount += M1EncoderCount;
+    M1EncoderCount = 0;
+    M2EncoderCount = 0;
+    delay(100);
+  }
+  stopMotor();
+  delay(1000); 
+}
+
+
+
+
+
+
+
+
+
 void Motor::stopMotor() {
   ledcWrite(PWM1channel,0);
   ledcWrite(PWM2channel,0);
