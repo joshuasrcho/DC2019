@@ -24,7 +24,7 @@ void setup() {
 
 void loop() {
 
-  
+  char p=0;
  //motor.turnLeft(90);
  //delay(1000);
 // motor.turnLeft(180);
@@ -38,8 +38,8 @@ void loop() {
   
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
-    char c = SerialBT.read();
-    if(c == 'o'){ // next two numbers received are x and y coordinate of target
+     p = SerialBT.read();
+    if(p == 'o'){ // next two numbers received are x and y coordinate of target
       String xpos = readBTline();
       String ypos = readBTline();
       
@@ -56,25 +56,27 @@ void loop() {
       SerialBT.print(" ");
       SerialBT.println(ypos);
     }
-    else if (c == 'w'){
+    else if (p == 'w'){
       Serial.print('w');
-      motor.forward(1000);
+      motor.forward(10);
+      Serial.print('wd');
     }
-    else if (c == 's'){
+    else if (p == 's'){
       Serial.print('s');
-      motor.backward(1000);
+      motor.backward(10);
     }
-    else if (c == 'd'){
+    else if (p == 'd'){
       Serial.print('d');
-      motor.turnRight(360);
+      motor.turnRight(10);
     } 
-    else if (c == 'a'){
+    else if (p == 'a'){
       Serial.print('a');
-      motor.turnLeft(360);
+      motor.turnLeft(10);
     }       
   }
   delay(20);
   /****************************************************/
+  Serial.print("hi");
 }
 
 void ISRcountM1(){ // ISR
@@ -124,4 +126,5 @@ void scan(){
     SerialBT.print(" ");
     SerialBT.println(250);
   }
+  
 }

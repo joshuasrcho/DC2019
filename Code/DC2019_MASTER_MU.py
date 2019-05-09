@@ -71,4 +71,4 @@ def on_key_down(key):  # key names are saved in CAPS
     if key.name == 'D':
         ser.write(b'd')
         print("Sent d")
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM9', 9600)
