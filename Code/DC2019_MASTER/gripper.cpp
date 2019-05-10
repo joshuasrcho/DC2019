@@ -13,7 +13,6 @@ void Gripper::openGripper(){
     Claw.write(i); // Make servo go to 180 degrees 
     delay(5);
   }
-  delay(1000);
 }
 
 // This function makes the robot grab cube
@@ -27,11 +26,11 @@ bool Gripper::closeGripper(){
     Claw.write(i);
     delay(5);
     if (pbval1 and pbval2){
+      Claw.write(i-2);
       return true;
     }else if (Claw.read() == 30) {
       return false;
     }
   }
-  delay(1000);
 }
 
