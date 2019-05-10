@@ -67,6 +67,8 @@ def update(dt):
         if(values[0] == 'g'):
             targetx.append(int(values[1]))
             targety.append(int(values[2]))
+        if(values[0]) == 'k'):
+            screen.draw.text('caught', (190, 20), color="orange", fontsize=30)
 
 def on_mouse_down(button, pos):
     print("Mouse button", button, "down at", pos)
