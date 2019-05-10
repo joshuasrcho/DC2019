@@ -15,7 +15,7 @@ Gripper gripper;
 // Needed for vive
 char message1[50];
 int m1 = 0;
-float xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0;
+float xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0; 
 
 
 
@@ -33,9 +33,14 @@ void loop() {
   scan();
   checkVive();
 
+  Serial.print("Pos1");
   Serial.print(xpos1);
   Serial.print(" ");
-  Serial.println(ypos1);
+  Serial.print(ypos1);
+  Serial.print("Pos2");
+  Serial.print(xpos2);
+  Serial.print(" ");
+  Serial.print(ypos2);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
      p = SerialBT.read();
@@ -124,10 +129,6 @@ void scan(){
   }
   distance = distance/5;
   Serial.println(distance);
-  SerialBT.print("g ");
-  SerialBT.print(int(distance*8));
-    SerialBT.print(" ");
-    SerialBT.println(250);
 
   if ((distance < 12) and (distance > 4.5)){
     
@@ -174,5 +175,13 @@ void checkVive(){
       m1++;
     }
   }
+}
+
+void calcPosition(){
+  float xcenter = 0, ycenter = 0, botAngle = 0;
+  xcenter = (xpos1+xpos2)/2;
+  ycenter = (ypos1+ypos2)/2;
+  botAngle = (xpos2-xpos1);
+  
 }
 
