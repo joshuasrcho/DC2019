@@ -17,7 +17,7 @@ float Ultrasense::distance_detect(){
     delayMicroseconds(10);
     digitalWrite(trigPin, LOW);
     // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = duration + pulseIn(echoPin, HIGH);
+    duration = duration + pulseIn(echoPin, HIGH, 10000);
   }
     
   // Calculating the distance

@@ -16,7 +16,7 @@ bool Laser::laser_detect(int threshold){
   digitalWrite(laser, LOW); 
   offVal = analogRead(lightsensor);
   delay(10);
-  Serial.println(offVal-onVal);
+  //Serial.println(offVal-onVal);
   if ((offVal-onVal) > threshold){
     return true;
   }

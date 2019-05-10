@@ -119,14 +119,18 @@ String readBTline(){
 void scan(){
   int laserThreshold;
   float distance = 0;
-//  for (int i=0; i<5; i++){
-//    distance = distance + usensor.distance_detect();
-//  }
-//  distance = distance/5;
-  //Serial.println(distance);
-  distance = 6;
-  
+  for (int i=0; i<5; i++){
+    distance = distance + usensor.distance_detect();
+  }
+  distance = distance/5;
+  Serial.println(distance);
+  SerialBT.print("g ");
+  SerialBT.print(int(distance*8));
+    SerialBT.print(" ");
+    SerialBT.println(250);
+
   if ((distance < 12) and (distance > 4.5)){
+    
     laserThreshold = -900;
     if (laser.laser_detect(laserThreshold)){
       SerialBT.print("g ");
@@ -135,9 +139,6 @@ void scan(){
       SerialBT.print("r ");
       //Serial.print("r ");
     }
-    //Serial.print(int(distance*8));
-    //Serial.print(" ");
-    //Serial.println(250);
     
     SerialBT.print(int(distance*8));
     SerialBT.print(" ");
