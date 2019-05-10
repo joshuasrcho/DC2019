@@ -17,22 +17,28 @@ targety = [1000]
 barrierx = [1000]
 barriery = [1000]
 
+grabbed = False
 
-space = Actor('space')
+space = Actor('space',(100,100))
 
 def draw():
     screen.fill((0, 1, 0))
-    screen.draw.text('Hunter Luckless', (190, 20), color="orange", fontsize=30)
+    screen.draw.text('Hunter Luckless', (200, 20), color="orange", fontsize=30)
     drawrect()
     drawspace()
     for i in range(len(targetx)):
         draw_target((targetx[i],targety[i]),(0,255,0))
     for j in range(len(barrierx)):
         draw_target((barrierx[j],barriery[j]),(255,0,0))
+    if grabbed:
+        screen.draw.text('Grabbed target!', (400, 550), color="orange", fontsize=25)
+
 
 
 def drawspace():
     space.draw()
+    space.inflate(-200,-200)
+
 
 def drawrect():
     r1 = Rect((96, 96), (144, 144))
@@ -53,6 +59,7 @@ def draw_target(pos,color):
 def update(dt):
     global c, HEIGHT
     global x, analog, targetx, targety, dotColor
+    global grabbed
     c = (c + 1) % 256
     while ser.in_waiting:
         line = ser.read_until().strip()  # strip() removes the \r\n
@@ -67,8 +74,11 @@ def update(dt):
         if(values[0] == 'g'):
             targetx.append(int(values[1]))
             targety.append(int(values[2]))
-        if(values[0]) == 'k'):
-            screen.draw.text('caught', (190, 20), color="orange", fontsize=30)
+        if(values[0] == 'k'):
+            grabbed = True
+            print("grabbed!")
+        if(values[0] == 'l'):
+            grabbed = False
 
 def on_mouse_down(button, pos):
     print("Mouse button", button, "down at", pos)
