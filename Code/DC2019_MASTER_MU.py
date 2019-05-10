@@ -76,12 +76,8 @@ def on_mouse_down(button, pos):
     ser.write(str(pos[1]).encode())
     ser.write(b'\n')
 
-def on_mouse_up(button, pos):
-    print("Mouse button", button, "up at", pos)
-    ser.write(b'p')
-    ser.write(b'a')
-
 def on_key_down(key):  # key names are saved in CAPS
+    # Use the following keys for driving
     if key.name == 'W':
         ser.write(b'w')
         print("Sent w")
@@ -94,4 +90,14 @@ def on_key_down(key):  # key names are saved in CAPS
     if key.name == 'D':
         ser.write(b'd')
         print("Sent d")
-ser = serial.Serial('COM9', 9600)
+    # Use the following keys for more precise movement
+
+    # use the following keys for gripper
+    if key.name == 'UP': # open gripper
+        ser.write(b'0')
+        print("Sent 0")
+    if key.name == 'DOWN':
+        ser.write(b'9')
+        print("Sent 9")
+
+ser = serial.Serial('COM6', 9600)

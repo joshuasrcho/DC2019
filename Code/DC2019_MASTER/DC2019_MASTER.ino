@@ -12,6 +12,11 @@ Ultrasense usensor;
 Motor motor;
 Gripper gripper;
 
+// Needed for vive
+char message1[50];
+int m1 = 0;
+float xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0;
+
 
 
 void setup() {
@@ -20,22 +25,17 @@ void setup() {
   Serial.begin(115200);
   SerialBT.begin("HunterLuckless"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
+  Serial2.begin(9600,SERIAL_8N1, 16, 17); // for teensy. Tx1 = pin 17, Rx1 = pin 16
 }
 
 void loop() {
+  char p;
+  scan();
+  checkVive();
 
-  char p=0;
- //motor.turnLeft(90);
- //delay(1000);
-// motor.turnLeft(180);
- //delay(1000);
- //motor.turnLeft(270);
- //delay(1000);
- //motor.turnLeft(360);
-// delay(1000);
-  
-
-  
+  Serial.print(xpos1);
+  Serial.print(" ");
+  Serial.println(ypos1);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
      p = SerialBT.read();
@@ -59,7 +59,6 @@ void loop() {
     else if (p == 'w'){
       Serial.print('w');
       motor.forward(10);
-      Serial.print('wd');
     }
     else if (p == 's'){
       Serial.print('s');
@@ -72,11 +71,20 @@ void loop() {
     else if (p == 'a'){
       Serial.print('a');
       motor.turnLeft(10);
-    }       
+    }
+
+    else if (p == '0'){
+      Serial.print('0');
+      gripper.openGripper();
+    } 
+    else if (p == '9'){
+      Serial.print('9');
+      gripper.closeGripper();
+    }
+            
   }
   delay(20);
   /****************************************************/
-  Serial.print("hi");
 }
 
 void ISRcountM1(){ // ISR
@@ -108,19 +116,24 @@ void scan(){
   char c = 0;
   int laserThreshold;
   float distance = 0;
-  distance = usensor.distance_detect();
+  for (int i=0; i<5; i++){
+    distance = distance + usensor.distance_detect();
+  }
+  distance = distance/5;
+  //Serial.println(distance);
+  
   if ((distance < 12) and (distance > 4.5)){
     laserThreshold = -900;
     if (laser.laser_detect(laserThreshold)){
       SerialBT.print("g ");
-      Serial.print("g ");
+      //Serial.print("g ");
     } else{
       SerialBT.print("r ");
-      Serial.print("r ");
+      //Serial.print("r ");
     }
-    Serial.print(int(distance*8));
-    Serial.print(" ");
-    Serial.println(250);
+    //Serial.print(int(distance*8));
+    //Serial.print(" ");
+    //Serial.println(250);
     
     SerialBT.print(int(distance*8));
     SerialBT.print(" ");
@@ -128,3 +141,33 @@ void scan(){
   }
   
 }
+
+
+void checkVive(){
+  char type = ' ';
+  float val1 = 0, val2 = 0;
+  
+  while(Serial2.available()){
+    message1[m1] = Serial2.read();
+    if (message1[m1] == '\n'){
+      sscanf(message1,"%c %f %f", &type, &val1, &val2);
+      if (type == 'a'){
+        xpos1 = val1;
+        ypos1 = val2;
+      }
+      else if (type == 'b'){
+        xpos2 = val1;
+        ypos2 = val2;
+      }
+      m1 = 0;
+      int iii;
+      for(iii=0;iii<50;iii++){
+        message1[iii] = 0;
+      }
+    }
+    else {
+      m1++;
+    }
+  }
+}
+
