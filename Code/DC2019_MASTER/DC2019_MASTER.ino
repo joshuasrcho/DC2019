@@ -75,11 +75,15 @@ void loop() {
 
     else if (p == '0'){
       Serial.print('0');
+      SerialBT.println('l');
       gripper.openGripper();
     } 
     else if (p == '9'){
       Serial.print('9');
-      gripper.closeGripper();
+      bool grabbed = gripper.closeGripper();
+      if (grabbed){
+        SerialBT.println('k');
+      }
     }
             
   }
@@ -113,14 +117,14 @@ String readBTline(){
 
 // scan using usensor and laser. if detected, send object coordinates and red/green over bluetooth
 void scan(){
-  char c = 0;
   int laserThreshold;
   float distance = 0;
-  for (int i=0; i<5; i++){
-    distance = distance + usensor.distance_detect();
-  }
-  distance = distance/5;
+//  for (int i=0; i<5; i++){
+//    distance = distance + usensor.distance_detect();
+//  }
+//  distance = distance/5;
   //Serial.println(distance);
+  distance = 6;
   
   if ((distance < 12) and (distance > 4.5)){
     laserThreshold = -900;
