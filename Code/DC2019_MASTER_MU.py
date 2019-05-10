@@ -1,6 +1,11 @@
 import serial
 import string
 
+black = (0, 0, 0)
+white = (255, 255, 255)
+blue = (0, 0, 255)
+green = (0, 255, 0)
+red = (255, 0, 0)
 WIDTH = 576  # Board is 6ft x 6ft. Increment by 0.125 inch
 HEIGHT = 576
 TITLE = "Battleship"
@@ -12,13 +17,32 @@ targety = [1000]
 barrierx = [1000]
 barriery = [1000]
 
+
+space = Actor('space')
+
 def draw():
-    screen.fill((0, 0, 0))
+    screen.fill((0, 1, 0))
+    screen.draw.text('Hunter Luckless', (190, 20), color="orange", fontsize=30)
+    drawrect()
+    drawspace()
     for i in range(len(targetx)):
         draw_target((targetx[i],targety[i]),(0,255,0))
     for j in range(len(barrierx)):
         draw_target((barrierx[j],barriery[j]),(255,0,0))
 
+
+def drawspace():
+    space.draw()
+
+def drawrect():
+    r1 = Rect((96, 96), (144, 144))
+    r2 = Rect((336, 96), (144, 144))
+    r3 = Rect((96, 336), (144, 144))
+    r4 = Rect((336, 336), (144, 144))
+    screen.draw.rect(r1, white)
+    screen.draw.rect(r2, white)
+    screen.draw.rect(r3, white)
+    screen.draw.rect(r4, white)
 
 def draw_target(pos,color):
     xpos = pos[0]
@@ -43,7 +67,6 @@ def update(dt):
         if(values[0] == 'g'):
             targetx.append(int(values[1]))
             targety.append(int(values[2]))
-
 
 def on_mouse_down(button, pos):
     print("Mouse button", button, "down at", pos)
