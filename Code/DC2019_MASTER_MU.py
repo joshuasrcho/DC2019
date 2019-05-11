@@ -54,7 +54,6 @@ def draw_target(pos,color):
     ypos = pos[1]
     screen.draw.filled_circle((xpos, ypos), 3, color)  # draw a green circle at the position
 
-
 def update(dt):
     global c, HEIGHT
     global x, analog, targetx, targety, dotColor
@@ -84,6 +83,9 @@ def update(dt):
         space = Actor('space',(posx[1] , posy[1]))
         posx.pop(0)
         posy.pop(0)
+        if(values[0] == 'i'):
+            angle = int(values[1])
+            space.angle_to(angle)
 
 
 
