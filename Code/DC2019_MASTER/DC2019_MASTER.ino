@@ -21,6 +21,7 @@ char message1[50];
 int m1 = 0;
 float xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0; 
 double xcenter = 0, ycenter = 0, botAngle = 0;
+int orientation;
 
 // for vive calculation
 //    8----76----5
@@ -30,7 +31,7 @@ double xcenter = 0, ycenter = 0, botAngle = 0;
 // ***********side is either 1278 or 3456***************
 int side = 1278;
 
-double corner1[] = {2.6, 2.7};
+double corner1[] = {2.2, -4.1};
 double corner2[] = {13.4, -2.2};
 double corner3[] = {2.56, -2.6};
 double corner4[] = {13.5, 1.8};
@@ -60,10 +61,14 @@ void setup() {
 
 void loop() {
   char p;
+  getOrientation();
   scan();
   checkVive();
   calcPosition();
-  getOrientation();
+  
+  Serial.print(xpos1);
+  Serial.print(" ");
+  Serial.println(ypos1);
   
   // SerialBT.println(vive calculation);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
@@ -72,7 +77,7 @@ void loop() {
 
     if (p == 'w'){
       Serial.print('w');
-      motor.forward(10);
+      motor.forward(3*12*8);
     }
     else if (p == 's'){
       Serial.print('s');
@@ -87,10 +92,10 @@ void loop() {
       motor.turnLeft(10);
     }
 
-    else if (p == '0'){
-      Serial.print('0');
+    else if (p == '6'){
+      Serial.print('6');
       SerialBT.println('l');
-      gripper.openGripper();
+      gripper.openGripper(180);
     } 
     else if (p == '9'){
       Serial.print('9');
@@ -99,7 +104,16 @@ void loop() {
         SerialBT.println('k');
       }
     }
-            
+    else if (p == '8'){
+      Serial.print('8');
+      SerialBT.println('l');
+      gripper.openGripper(100);
+    }
+    else if (p == '7'){
+      Serial.print('7');
+      SerialBT.println('l');
+      gripper.openGripper(140);
+    }        
   }
   delay(20);
   /****************************************************/
@@ -133,6 +147,7 @@ String readBTline(){
 void scan(){
   int laserThreshold;
   float distance = 0;
+  float xpos = 0, ypos = 0;
   for (int i=0; i<5; i++){
     distance = distance + usensor.distance_detect();
   }
@@ -149,10 +164,11 @@ void scan(){
       SerialBT.print("r ");
       //Serial.print("r ");
     }
-    
-    SerialBT.print(int(distance*8));
+    xpos = xcenter +(distance*8+64)*sin(orientation*3.141/180);
+    ypos = ycenter +(distance*8+64)*cos(orientation*3.141/180);
+    SerialBT.print(int(xpos));
     SerialBT.print(" ");
-    SerialBT.println(250);
+    SerialBT.println(int(ypos));
   }
   
 }
@@ -188,19 +204,23 @@ void checkVive(){
 
 void calcPosition(){
   if (side == 1278){
-    double u[] = {(xpos2-xpos1),(ypos2-ypos1)};
-    double v[] = {(corner7[0]-corner2[0]),(corner7[1]-corner2[1])};
-    botAngle = acos((u[0]*v[0] + u[1]*v[1])/(sqrt(sq(u[0]) + sq(u[1])) + sqrt(sq(v[0]) + sq(v[1]))));
+    xcenter = 12*8*(xpos1+xpos2)/2 - corner1[0];
+    ycenter = 12*8*(ypos1+ypos2)/2 - corner1[1];
   }
   else{
-   double u[] = {(xpos2-xpos1),(ypos2-ypos1)};
-   double v[] = {(corner3[0]-corner6[0]),(corner3[1]-corner6[1])};
-   // bot angle in degrees
-   botAngle = (360/(2*3.141)) * acos((u[0]*v[0] + u[1]*v[1])/(sqrt(sq(u[0]) + sq(u[1])) + sqrt(sq(v[0]) + sq(v[1])))); 
+    xcenter = 12*8*((xpos1+xpos2)/2 - corner5[0]);
+    ycenter = 12*8*((ypos1+ypos2)/2 - corner5[1]);
   }
-  
-  xcenter = (xpos1+xpos2)/2;
-  ycenter = (ypos1+ypos2)/2;
+
+  SerialBT.print("p ");
+  SerialBT.print(int(xcenter));
+  SerialBT.print(" ");
+  SerialBT.println(int(ycenter));
+
+//  Serial.print("p ");
+//  Serial.print(int(xcenter));
+//  Serial.print(" ");
+//  Serial.println(int(ycenter));
 
 }
 
@@ -208,14 +228,14 @@ void getOrientation(){
    /* Get a new sensor event */ 
   sensors_event_t event; 
   bno.getEvent(&event);
-  int angle = event.orientation.x;
+  orientation = event.orientation.x;
   
   /* Display the floating point data */
-  Serial.print("o ");
-  Serial.println(angle);
+  Serial.print("i ");
+  Serial.println(orientation);
 
-  SerialBT.print("o ");
-  SerialBT.println(angle);
+  SerialBT.print("i ");
+  SerialBT.println(orientation);
   
   delay(100);
 }

@@ -17,12 +17,12 @@ targetx = [1000]
 targety = [1000]
 barrierx = [1000]
 barriery = [1000]
-posx = [1000]
-posy = [1000]
+posx = 0
+posy = 0
 
 grabbed = False
 
-space = Actor('space',(100 , 100))
+space = Actor('space',midbottom = (posx, posy))
 
 def draw():
     screen.fill((0, 1, 0))
@@ -62,10 +62,9 @@ def update(dt):
     while ser.in_waiting:
         line = ser.read_until().strip()  # strip() removes the \r\n
         values = line.decode('ascii').split(' ')
+        if (ser.in_waiting > 10):
+            ser.reset_input_buffer()
         print(values)
-        if(values[0] == 'o'):
-            barrierx.append(int(values[1]))
-            barriery.append(int(values[2]))
         if(values[0] == 'r'):
             barrierx.append(int(values[1]))
             barriery.append(int(values[2]))
@@ -78,14 +77,12 @@ def update(dt):
         if(values[0] == 'l'):
             grabbed = False
         if(values[0] == 'p'):
-            posx.append(int(values[1]))
-            posy.append(int(values[1]))
-        space = Actor('space',(posx[1] , posy[1]))
-        posx.pop(0)
-        posy.pop(0)
+            posx = (int(values[1]))
+            posy = (int(values[1]))
+            space.pos = (posx,posy)
         if(values[0] == 'i'):
             angle = int(values[1])
-            space.angle_to(angle)
+            space.angle = -angle
 
 
 
@@ -115,10 +112,16 @@ def on_key_down(key):  # key names are saved in CAPS
 
     # use the following keys for gripper
     if key.name == 'UP': # open gripper
-        ser.write(b'0')
-        print("Sent 0")
+        ser.write(b'8')
+        print("Sent 8")
+    if key.name == 'RSHIFT': # open gripper
+        ser.write(b'7')
+        print("Sent 7")
+    if key.name == 'BACKSLASH': # open gripper
+        ser.write(b'6')
+        print("Sent 6")
     if key.name == 'DOWN':
         ser.write(b'9')
         print("Sent 9")
 
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM6', 9600)

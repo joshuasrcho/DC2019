@@ -12,7 +12,7 @@
 class Gripper{
   public:
     Gripper(void);
-    void openGripper(void);
+    void openGripper(int angle);
     bool closeGripper(void);
     
   private: 

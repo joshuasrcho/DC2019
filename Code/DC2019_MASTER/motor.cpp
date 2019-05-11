@@ -169,13 +169,6 @@ void Motor::turnLeft(int angle){
 }
 
 
-
-
-
-
-
-
-
 void Motor::stopMotor() {
   ledcWrite(PWM1channel,0);
   ledcWrite(PWM2channel,0);

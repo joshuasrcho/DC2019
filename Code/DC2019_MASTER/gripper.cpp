@@ -7,12 +7,21 @@ Gripper::Gripper(void){
 }
 
 // This function makes the robot open its claw
-void Gripper::openGripper(){
+void Gripper::openGripper(int angle){
   Serial.println("opening..");
-  for(int i=Claw.read(); i<180; i++){
-    Claw.write(i); // Make servo go to 180 degrees 
-    delay(5);
+  if (Claw.read() > angle){
+    for(int i=Claw.read(); i>angle; i--){
+      Claw.write(i); // Make servo go to 180 degrees 
+      delay(5);
+    }
   }
+  else{
+      for(int i=Claw.read(); i<angle; i++){
+        Claw.write(i); // Make servo go to 180 degrees 
+        delay(5); 
+      }
+  }
+  
 }
 
 // This function makes the robot grab cube
@@ -20,7 +29,7 @@ bool Gripper::closeGripper(){
   Serial.println("closing..");
   int pbval1; 
   int pbval2;
-  for (int i=180; i>0; i--){
+  for (int i=Claw.read(); i>0; i--){
     pbval1=digitalRead(pb1);
     pbval2=digitalRead(pb2);
     Claw.write(i);
