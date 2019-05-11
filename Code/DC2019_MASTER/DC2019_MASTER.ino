@@ -16,7 +16,24 @@ Gripper gripper;
 char message1[50];
 int m1 = 0;
 float xpos1 = 0, ypos1 = 0, xpos2 = 0, ypos2 = 0; 
+double xcenter = 0, ycenter = 0, botAngle = 0;
 
+// for vive calculation
+//    8----76----5
+//vive|          |
+//    1----23----4
+
+// ***********side is either 1278 or 3456***************
+int side = 1278;
+
+double corner1[] = {2.6, 2.7};
+double corner2[] = {13.4, -2.2};
+double corner3[] = {2.56, -2.6};
+double corner4[] = {13.5, 1.8};
+double corner5[] = {2.6, 2.7};
+double corner6[] = {13.4, -2.2};
+double corner7[] = {2.6, 2.7};
+double corner8[] = {13.4, -2.2};
 
 
 void setup() {
@@ -32,15 +49,11 @@ void loop() {
   char p;
   scan();
   checkVive();
-
-  Serial.print("Pos1");
-  Serial.print(xpos1);
+  calcPosition();
+  Serial.print(xcenter);
   Serial.print(" ");
-  Serial.print(ypos1);
-  Serial.print("Pos2");
-  Serial.print(xpos2);
-  Serial.print(" ");
-  Serial.print(ypos2);
+  Serial.println(ycenter);
+  // SerialBT.println(vive calculation);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
      p = SerialBT.read();
@@ -128,7 +141,7 @@ void scan(){
     distance = distance + usensor.distance_detect();
   }
   distance = distance/5;
-  Serial.println(distance);
+  //Serial.println(distance);
 
   if ((distance < 12) and (distance > 4.5)){
     
@@ -178,10 +191,22 @@ void checkVive(){
 }
 
 void calcPosition(){
-  float xcenter = 0, ycenter = 0, botAngle = 0;
+  if (side == 1278){
+    double u[] = {(xpos2-xpos1),(ypos2-ypos1)};
+    double v[] = {(corner7[0]-corner2[0]),(corner7[1]-corner2[1])};
+    botAngle = acos((u[0]*v[0] + u[1]*v[1])/(sqrt(sq(u[0]) + sq(u[1])) + sqrt(sq(v[0]) + sq(v[1]))));
+  }
+  else{
+   double u[] = {(xpos2-xpos1),(ypos2-ypos1)};
+   double v[] = {(corner3[0]-corner6[0]),(corner3[1]-corner6[1])};
+   // bot angle in degrees
+   botAngle = (360/(2*3.141)) * acos((u[0]*v[0] + u[1]*v[1])/(sqrt(sq(u[0]) + sq(u[1])) + sqrt(sq(v[0]) + sq(v[1])))); 
+  }
+  
   xcenter = (xpos1+xpos2)/2;
   ycenter = (ypos1+ypos2)/2;
-  botAngle = (xpos2-xpos1);
+ 
+
   
 }
 
