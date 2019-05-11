@@ -51,7 +51,6 @@ void setup(void) {
 }
 
 void loop() {
-
   // get vive position
   if (V1.useMe == 1) {
     V1.useMe = 0;

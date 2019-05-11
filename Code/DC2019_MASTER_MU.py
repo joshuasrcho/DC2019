@@ -1,6 +1,11 @@
 import serial
 import string
 import time
+import numpy as np
+
+transMat = np.array([[1,0],[0,1],[0,0]])
+dimMat = np.array([[0,0],[0,72*8],[36*8,36*8],[72*8, 72*8], [72*8, 0]])
+dimMatVive = [[0,0,1],[0,0,1],[0,0,1],[0,0,1],[0,0,1]]
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -21,12 +26,15 @@ posx = 0
 posy = 0
 
 grabbed = False
-
+orientation_offset =0
 space = Actor('space',midbottom = (posx, posy))
 
 def draw():
     screen.fill((0, 1, 0))
     screen.draw.text('Hunter Luckless', (200, 20), color="orange", fontsize=30)
+    screen.draw.text(str(posx), (450, 20), color="orange", fontsize=30)
+    screen.draw.text(',', (465, 20), color="orange", fontsize=30)
+    screen.draw.text(str(posy), (480, 20), color="orange", fontsize=30)
     drawrect()
     drawspace()
     for i in range(len(targetx)):
@@ -57,20 +65,36 @@ def draw_target(pos,color):
 def update(dt):
     global c, HEIGHT
     global x, analog, targetx, targety, dotColor
-    global grabbed
+    global grabbed, posx, posy
     c = (c + 1) % 256
     while ser.in_waiting:
         line = ser.read_until().strip()  # strip() removes the \r\n
         values = line.decode('ascii').split(' ')
         if (ser.in_waiting > 10):
             ser.reset_input_buffer()
-        print(values)
+        #print(values)
         if(values[0] == 'r'):
-            barrierx.append(int(values[1]))
-            barriery.append(int(values[2]))
+            bx = (int(values[1]))
+            by = (int(values[2]))
+
+            position = np.array([[bx],[by],[1]])
+            position = np.dot(transMat.T,position)
+
+            bx = position.item(0)
+            by = HEIGHT - position.item(1)
+            barrierx.append(bx)
+            barriery.append(by)
         if(values[0] == 'g'):
-            targetx.append(int(values[1]))
-            targety.append(int(values[2]))
+            vx = (int(values[1]))
+            vy = (int(values[2]))
+
+            position = np.array([[vx],[vy],[1]])
+            position = np.dot(transMat.T,position)
+
+            vx = position.item(0)
+            vy = HEIGHT - position.item(1)
+            targetx.append(vx)
+            targety.append(vy)
         if(values[0] == 'k'):
             grabbed = True
             print("grabbed!")
@@ -78,11 +102,19 @@ def update(dt):
             grabbed = False
         if(values[0] == 'p'):
             posx = (int(values[1]))
-            posy = (int(values[1]))
-            space.pos = (posx,posy)
+            posy = (int(values[2]))
+
+            position = np.array([[posx],[posy],[1]])
+            position = np.dot(transMat.T,position)
+
+            posx = position.item(0)
+            posy = position.item(1)
+
+            space.pos = (posx,HEIGHT-posy)
+
         if(values[0] == 'i'):
             angle = int(values[1])
-            space.angle = -angle
+            space.angle = -angle - orientation_offset
 
 
 
@@ -94,7 +126,10 @@ def on_mouse_down(button, pos):
     ser.write(str(pos[1]).encode())
     ser.write(b'\n')
 
-def on_key_down(key):  # key names are saved in CAPS
+def on_key_down(key):
+    global transMat
+    global orientation_offset
+    # key names are saved in CAPS
     # Use the following keys for driving
     if key.name == 'W':
         ser.write(b'w')
@@ -114,14 +149,43 @@ def on_key_down(key):  # key names are saved in CAPS
     if key.name == 'UP': # open gripper
         ser.write(b'8')
         print("Sent 8")
-    if key.name == 'RSHIFT': # open gripper
-        ser.write(b'7')
-        print("Sent 7")
-    if key.name == 'BACKSLASH': # open gripper
-        ser.write(b'6')
-        print("Sent 6")
     if key.name == 'DOWN':
         ser.write(b'9')
         print("Sent 9")
 
-ser = serial.Serial('COM6', 9600)
+    if key.name == 'K_1':
+        print(posx)
+        print(posy)
+        dimMatVive[0][0] = posx
+        dimMatVive[0][1] = posy
+        print(dimMatVive)
+    if key.name == 'K_2':
+        dimMatVive[1][0] = posx
+        dimMatVive[1][1] = posy
+        print(dimMatVive)
+    if key.name == 'K_3':
+        dimMatVive[2][0] = posx
+        dimMatVive[2][1] = posy
+        print(dimMatVive)
+    if key.name == 'K_4':
+        dimMatVive[3][0] = posx
+        dimMatVive[3][1] = posy
+        print(dimMatVive)
+    if key.name == 'K_5':
+        dimMatVive[4][0] = posx
+        dimMatVive[4][1] = posy
+        print(dimMatVive)
+    if key.name == 'K_6':
+        dimMatVive2 = np.array(dimMatVive)
+        transMat = np.linalg.solve(np.dot(dimMatVive2.T, dimMatVive2),np.dot(dimMatVive2.T, dimMat))
+        print(transMat)
+
+    if key.name == 'K_7':
+        orientation_offset += 90
+
+
+
+
+
+
+ser = serial.Serial('COM5', 9600)

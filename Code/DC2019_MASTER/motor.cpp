@@ -27,6 +27,7 @@ Motor::Motor(void){
 // 400 counts per revolution. Wheel diameter is 2.5 inches. 
 // count = (distance*400) / (8*2.5*3.14)
 void Motor::forward(int distance){
+  long startTime = millis();
   digitalWrite(M1DIR,LOW);
   digitalWrite(M2DIR,HIGH);
   M1EncoderCount = 0; // reset M1 encoder count to 0
@@ -42,6 +43,9 @@ void Motor::forward(int distance){
   int count = (distance*400)/(8*2.5*3.14); // convert input distance to number of encoder counts 
   
   while(totalCount < count){ // go forward until robot reaches target encoder count. Repeat this loop at 10Hz
+    if (millis()-startTime > 3000){
+      break;
+    }
     ledcWrite(PWM1channel, masterPWM); // Always drive M1 with masterPWM
     ledcWrite(PWM2channel, slavePWM); // Always drive M2 with slavePWM
     error = M1EncoderCount - M2EncoderCount; // calculate error between two encoder counts
@@ -69,6 +73,7 @@ void Motor::forward(int distance){
 // 400 counts per revolution. Wheel diameter is 2.5 inches. 
 // count = (distance*400) / (8*2.5*3.14)
 void Motor::backward(int distance) {
+  long startTime = millis();
   digitalWrite(M1DIR,HIGH); 
   digitalWrite(M2DIR,LOW); 
   M1EncoderCount = 0; // reset M1 encoder count to 0
@@ -84,6 +89,9 @@ void Motor::backward(int distance) {
   int count = (distance*400)/(8*2.5*3.14); // convert input distance to number of encoder counts 
   
   while(totalCount < count){ // go backward until robot reaches target encoder count. Repeat this loop at 10Hz
+    if (millis()-startTime > 3000){
+      break;
+    }
     ledcWrite(PWM1channel, masterPWM); // Always drive M1 with masterPWM
     ledcWrite(PWM2channel, slavePWM); // Always drive M2 with slavePWM
     error = M1EncoderCount - M2EncoderCount; // calculate error between two encoder counts

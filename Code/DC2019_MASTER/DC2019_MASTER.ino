@@ -66,9 +66,9 @@ void loop() {
   checkVive();
   calcPosition();
   
-  Serial.print(xpos1);
-  Serial.print(" ");
-  Serial.println(ypos1);
+  //Serial.print(xpos1);
+  //Serial.print(" ");
+  //Serial.println(ypos1);
   
   // SerialBT.println(vive calculation);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
@@ -77,7 +77,7 @@ void loop() {
 
     if (p == 'w'){
       Serial.print('w');
-      motor.forward(3*12*8);
+      motor.forward(10);
     }
     else if (p == 's'){
       Serial.print('s');
@@ -92,11 +92,6 @@ void loop() {
       motor.turnLeft(10);
     }
 
-    else if (p == '6'){
-      Serial.print('6');
-      SerialBT.println('l');
-      gripper.openGripper(180);
-    } 
     else if (p == '9'){
       Serial.print('9');
       bool grabbed = gripper.closeGripper();
@@ -107,13 +102,8 @@ void loop() {
     else if (p == '8'){
       Serial.print('8');
       SerialBT.println('l');
-      gripper.openGripper(100);
-    }
-    else if (p == '7'){
-      Serial.print('7');
-      SerialBT.println('l');
-      gripper.openGripper(140);
-    }        
+      gripper.openGripper(180);
+    }   
   }
   delay(20);
   /****************************************************/
@@ -164,8 +154,8 @@ void scan(){
       SerialBT.print("r ");
       //Serial.print("r ");
     }
-    xpos = xcenter +(distance*8+64)*sin(orientation*3.141/180);
-    ypos = ycenter +(distance*8+64)*cos(orientation*3.141/180);
+    xpos = xcenter +(distance*8+64)*sin(-orientation*3.141/180);
+    ypos = ycenter +(distance*8+64)*cos((180-orientation)*3.141/180);
     SerialBT.print(int(xpos));
     SerialBT.print(" ");
     SerialBT.println(int(ypos));
@@ -204,8 +194,8 @@ void checkVive(){
 
 void calcPosition(){
   if (side == 1278){
-    xcenter = 12*8*(xpos1+xpos2)/2 - corner1[0];
-    ycenter = 12*8*(ypos1+ypos2)/2 - corner1[1];
+    xcenter = 12*8*((xpos1+xpos2)/2 - corner1[0]);
+    ycenter = 12*8*((ypos1+ypos2)/2 - corner1[1]);
   }
   else{
     xcenter = 12*8*((xpos1+xpos2)/2 - corner5[0]);
@@ -217,10 +207,10 @@ void calcPosition(){
   SerialBT.print(" ");
   SerialBT.println(int(ycenter));
 
-//  Serial.print("p ");
-//  Serial.print(int(xcenter));
-//  Serial.print(" ");
-//  Serial.println(int(ycenter));
+  Serial.print("p ");
+  Serial.print(int(xcenter));
+  Serial.print(" ");
+  Serial.println(int(ycenter));
 
 }
 
@@ -231,8 +221,6 @@ void getOrientation(){
   orientation = event.orientation.x;
   
   /* Display the floating point data */
-  Serial.print("i ");
-  Serial.println(orientation);
 
   SerialBT.print("i ");
   SerialBT.println(orientation);
