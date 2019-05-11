@@ -1,5 +1,6 @@
 import serial
 import string
+import time
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -16,10 +17,12 @@ targetx = [1000]
 targety = [1000]
 barrierx = [1000]
 barriery = [1000]
+posx = [1000]
+posy = [1000]
 
 grabbed = False
 
-space = Actor('space',(100,100))
+space = Actor('space',(100 , 100))
 
 def draw():
     screen.fill((0, 1, 0))
@@ -33,12 +36,8 @@ def draw():
     if grabbed:
         screen.draw.text('Grabbed target!', (400, 550), color="orange", fontsize=25)
 
-
-
 def drawspace():
     space.draw()
-    space.inflate(-200,-200)
-
 
 def drawrect():
     r1 = Rect((96, 96), (144, 144))
@@ -79,6 +78,14 @@ def update(dt):
             print("grabbed!")
         if(values[0] == 'l'):
             grabbed = False
+        if(values[0] == 'p'):
+            posx.append(int(values[1]))
+            posy.append(int(values[1]))
+        space = Actor('space',(posx[1] , posy[1]))
+        posx.pop(0)
+        posy.pop(0)
+
+
 
 def on_mouse_down(button, pos):
     print("Mouse button", button, "down at", pos)
@@ -112,4 +119,4 @@ def on_key_down(key):  # key names are saved in CAPS
         ser.write(b'9')
         print("Sent 9")
 
-ser = serial.Serial('COM6', 9600)
+ser = serial.Serial('COM5', 9600)
