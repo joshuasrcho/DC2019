@@ -5,6 +5,10 @@
 #include "gripper.h"
 #include <stdio.h>
 #include <math.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
 BluetoothSerial SerialBT; //instantiate bluetooth serial
 Laser laser; // instantiate laser detector
@@ -36,6 +40,8 @@ double corner7[] = {2.6, 2.7};
 double corner8[] = {13.4, -2.2};
 
 
+Adafruit_BNO055 bno = Adafruit_BNO055(55);
+
 void setup() {
   attachInterrupt(digitalPinToInterrupt(motor.M1Encoder), ISRcountM1, RISING); // Every time encoder pulse rises, count the number of ticks
   attachInterrupt(digitalPinToInterrupt(motor.M2Encoder), ISRcountM2, RISING); // Every time encoder pulse rises, count the number of ticks 
@@ -43,6 +49,13 @@ void setup() {
   SerialBT.begin("HunterLuckless"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
   Serial2.begin(9600,SERIAL_8N1, 16, 17); // for teensy. Tx1 = pin 17, Rx1 = pin 16
+  if(!bno.begin())
+  {
+    /* There was a problem detecting the BNO055 ... check your connections */
+    Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+    while(1);
+  }
+  bno.setExtCrystalUse(true);
 }
 
 void loop() {
@@ -50,31 +63,14 @@ void loop() {
   scan();
   checkVive();
   calcPosition();
-  Serial.print(xcenter);
-  Serial.print(" ");
-  Serial.println(ycenter);
+  getOrientation();
+  
   // SerialBT.println(vive calculation);
 //  /************SEND DATA AND LISTEN TO BLUETOOTH ***************/
   if (SerialBT.available()) {
      p = SerialBT.read();
-    if(p == 'o'){ // next two numbers received are x and y coordinate of target
-      String xpos = readBTline();
-      String ypos = readBTline();
-      
-      Serial.print('o');
-      Serial.print(' ');
-      Serial.print(xpos);
-      Serial.print(' ');
-      Serial.println(ypos);
-      
-      digitalWrite(12,HIGH);
-      
-      SerialBT.print("o ");
-      SerialBT.print(xpos);
-      SerialBT.print(" ");
-      SerialBT.println(ypos);
-    }
-    else if (p == 'w'){
+
+    if (p == 'w'){
       Serial.print('w');
       motor.forward(10);
     }
@@ -205,8 +201,22 @@ void calcPosition(){
   
   xcenter = (xpos1+xpos2)/2;
   ycenter = (ypos1+ypos2)/2;
- 
 
+}
+
+void getOrientation(){
+   /* Get a new sensor event */ 
+  sensors_event_t event; 
+  bno.getEvent(&event);
+  int angle = event.orientation.x;
   
+  /* Display the floating point data */
+  Serial.print("o ");
+  Serial.println(angle);
+
+  SerialBT.print("o ");
+  SerialBT.println(angle);
+  
+  delay(100);
 }
 
