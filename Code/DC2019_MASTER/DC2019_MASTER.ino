@@ -91,6 +91,15 @@ void loop() {
       Serial.print('a');
       motor.turnLeft(10);
     }
+    else if (p == 'n'){
+      motor.turnRight(90);
+    }
+    else if (p == 'm'){
+      motor.forward(96);
+    }
+    else if (p == 'b'){
+      motor.turnLeft(90);
+    }
 
     else if (p == '9'){
       Serial.print('9');
@@ -146,13 +155,13 @@ void scan(){
 
   if ((distance < 12) and (distance > 4.5)){
     
-    laserThreshold = -900;
+    laserThreshold = -500;
     if (laser.laser_detect(laserThreshold)){
       SerialBT.print("g ");
-      //Serial.print("g ");
+      Serial.print("g ");
     } else{
       SerialBT.print("r ");
-      //Serial.print("r ");
+      Serial.print("r ");
     }
     xpos = xcenter +(distance*8+64)*sin(-orientation*3.141/180);
     ypos = ycenter +(distance*8+64)*cos((180-orientation)*3.141/180);

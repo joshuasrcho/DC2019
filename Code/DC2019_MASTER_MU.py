@@ -70,7 +70,8 @@ def update(dt):
     while ser.in_waiting:
         line = ser.read_until().strip()  # strip() removes the \r\n
         values = line.decode('ascii').split(' ')
-        if (ser.in_waiting > 10):
+        if (ser.in_waiting > 5):
+            print(ser.in_waiting)
             ser.reset_input_buffer()
         #print(values)
         if(values[0] == 'r'):
@@ -143,7 +144,13 @@ def on_key_down(key):
     if key.name == 'D':
         ser.write(b'd')
         print("Sent d")
-    # Use the following keys for more precise movement
+    # Use the following keys for driving further
+    if key.name == 'N':
+        ser.write(b'n')
+    if key.name == 'M':
+        ser.write(b'm')
+    if key.name == 'B':
+        ser.write(b'b')
 
     # use the following keys for gripper
     if key.name == 'UP': # open gripper
@@ -188,4 +195,4 @@ def on_key_down(key):
 
 
 
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM6', 9600)
